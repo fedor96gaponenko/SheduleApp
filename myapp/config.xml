@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<widget id="com.ionicframework.myapp232293" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>Shedule</name>
+  <description>
+        Shedule etc
+    </description>
+  <author email="f.gaponenko7@gmail.com" href="http://ionicframework.com/">
+      Gaponenko Fedor
+    </author>
+  <content src="index.html"/>
+  <access origin="*"/>
+  <preference name="webviewbounce" value="false"/>
+  <preference name="UIWebViewBounce" value="false"/>
+  <preference name="DisallowOverscroll" value="true"/>
+  <preference name="android-minSdkVersion" value="16"/>
+  <preference name="BackupWebStorage" value="none"/>
+  <preference name="SplashScreen" value="screen"/>
+  <preference name="SplashScreenDelay" value="3000"/>
+  <feature name="StatusBar">
+    <param name="ios-package" value="CDVStatusBar" onload="true"/>
+  </feature>
+  <platform name="android">
+    <icon src="resources/android/icon/myico1.png" density="ldpi"/>
+    <icon src="resources/android/icon/myico1.png" density="mdpi"/>
+    <icon src="resources/android/icon/myico1.png" density="hdpi"/>
+    <icon src="resources/android/icon/myico1.png" density="xhdpi"/>
+    <icon src="resources/android/icon/myico1.png" density="xxhdpi"/>
+    <icon src="resources/android/icon/myico1.png" density="xxxhdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="land-ldpi"/>
+    <splash src="resources/android/splash/myico1.png" density="land-mdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="land-hdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="land-xhdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="land-xxhdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="land-xxxhdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="port-ldpi"/>
+    <splash src="resources/android/splash/myico1.png" density="port-mdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="port-hdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="port-xhdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="port-xxhdpi"/>
+    <splash src="resources/android/splash/myico1.png" density="port-xxxhdpi"/>
+  </platform>
+</widget>

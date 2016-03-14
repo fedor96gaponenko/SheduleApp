@@ -1,0 +1,27 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "com.ionic.keyboard": {
+            "PACKAGE_NAME": "Shedule"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "Shedule"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "Shedule"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "Shedule"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "Shedule"
+        }
+    },
+    "dependent_plugins": {}
+}
