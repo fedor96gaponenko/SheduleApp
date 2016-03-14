@@ -3,6 +3,7 @@
 
 ```bash
 # Clone and Install dependencies
+$ npm install -g ionic
 $ git clone https://github.com/fedor96gaponenko/SheduleApp.git
 $ cd server
 $ npm install
