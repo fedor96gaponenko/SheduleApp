@@ -5,6 +5,7 @@
 # Clone and Install dependencies
 $ npm install -g ionic
 $ git clone https://github.com/fedor96gaponenko/SheduleApp.git
-$ cd server
+$ cd myapp/
 $ npm install
-$ node server.js
+$ionic -g install
+$ ionic serve

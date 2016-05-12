@@ -17,7 +17,7 @@ myapp.config(['$httpProvider', function($httpProvider) {
 ]);
 myapp.factory('Mytitles',  function( $resource){
   //http://myprojects101010-shedule111.rhcloud.com
-  return $resource('/titles/:titleid/' , { titleid : '@_id' } , {
+  return $resource('https://gentle-cliffs-18394.herokuapp.com/titles/:titleid/' , { titleid : '@_id' } , {
     update: {
       method: 'PUT'
     },
@@ -27,26 +27,36 @@ myapp.factory('Mytitles',  function( $resource){
     });
 });
 myapp.factory('Shedules',  function( $resource){
-  return $resource('/shedules/:sheduleId' , { sheduleId : '@_id' } ,{
-   getData: { method:'GET', isArray: true } ,
+  return $resource('https://gentle-cliffs-18394.herokuapp.com/shedules/:sheduleId' , { sheduleId : '@_id' } ,{
+   getData: { 
+    method:'GET', isArray: true
+     } ,
    update: {
-      method: 'PUT'
+      method: 'PUT', isArray: true
     },
     remove: {
-      method: 'DELETE'
+      method: 'DELETE', isArray: true
+    },
+    save: {
+      method: 'POST', isArray: true
     }
   });
 });
 myapp.controller('SheduleCtrl',function($scope,$resource, Mytitles, $http, Shedules, $ionicPopup){
-  $scope.titlesList = Mytitles.query();
+  $scope.titlesList = [{"title":"test1"}];
+  Mytitles.query(function(data){
+    $scope.titlesList=data;
+  });
+  $scope.currentShedule =0;
+  
   //var post = JSON.parse(window.localStorage['post'] || '{}');
   //$scope.shedulesList = Shedules.getData({ sheduleId :  0 });
-  $scope.shedulesList = JSON.parse(window.localStorage['nCurrentShedule'] );
-    $scope.times = JSON.parse(window.localStorage['times'] || '["8:15-9:35" ,"9:45-11:05" ,"Добавить"]') ;
-  $scope.auds = JSON.parse(window.localStorage['auds'] || '["419" ,"606" ,"Добавить"]');
+  $scope.shedulesList = JSON.parse(window.localStorage['nCurrentShedule'] || '[{"0":{"day":"Понедельник"},"1":[{"lect":"Тихонов Сергей Викторович","time":"8:15-9:35","kind":"Лекция","aud":"419","task":"Алгебра"},{"time":"9:45-11:05","kind":"Практика","task":"Геометрия","lect":"Суворов Владимир Васильевич","aud":"606"}]},{"0":{"day":"Вторник"},"1":[]},{"0":{"day":"Среда"},"1":[{"time":"17:30-18:50","kind":"Практика","task":"Дифференциальные уравнения","aud":"329","lect":"Прохорова Римма Александровна"}]},{"0":{"day":"Четверг"},"1":[]},{"0":{"day":"Пятница"},"1":[]},{"0":{"day":"Суббота"},"1":[]}]' );
+  $scope.times = JSON.parse(window.localStorage['times'] || '["8:15-9:35" ,"9:45-11:05" ,"11:15-12:35", "13:00-14:20", "14:30-15:50", "Добавить"]') ;
+  $scope.auds = JSON.parse(window.localStorage['auds'] || '["322", "329", "411" ,"419" ,"606", "Добавить"]');
   $scope.kinds = JSON.parse(window.localStorage['kinds'] || '["Лекция" ,"Практика" ,"Добавить"]');
-  $scope.tasks = JSON.parse(window.localStorage['tasks'] || '["Алгебра" ,"Геометрия" ,"Добавить"]');
-  $scope.lects = JSON.parse(window.localStorage['lects'] || '["Тихонов Сергей Викторович" ,"Суворов Владимир Васильевич" ,"Добавить"]') ;
+  $scope.tasks = JSON.parse(window.localStorage['tasks'] || '["Алгебра" ,"Геометрия" ,"Информационные технологии","Дифференциальные уравнения","Базы данных" ,"Добавить"]');
+  $scope.lects = JSON.parse(window.localStorage['lects'] || '["Тихонов Сергей Викторович" ,"Суворов Владимир Васильевич" ,"Дедков Даниил Юрьевич","Прохорова Римма Александровна", "Шибут Александр Степанович", "Добавить"]') ;
   $scope.tab = 1;
 
   $scope.setTab = function (tabId) {
@@ -72,13 +82,15 @@ myapp.controller('SheduleCtrl',function($scope,$resource, Mytitles, $http, Shedu
   };
   //edit shedule
   var editid;
-    editShedule = function(id) {
+
+  editShedule = function(id) {
       $scope.setTab(3);
       editid=id;
       $scope.currentShedule= id;
       $scope.newTitle=$scope.titlesList[id];  
-     $scope.viewShedule=Shedules.getData({ sheduleId :  editid });    
+      $scope.viewShedule  = $scope.shedulesList.slice();
   };
+     
   $scope.showeditBtn = function(){
     $scope.editBtn = !$scope.editBtn;
     $scope.delBtn =false;
@@ -91,7 +103,9 @@ myapp.controller('SheduleCtrl',function($scope,$resource, Mytitles, $http, Shedu
 
 $scope.saveEditShedule = function(){
   $scope.shedulesList = $scope.viewShedule.slice();
-    Shedules.update( { sheduleId :  editid } , $scope.viewShedule );
+    Shedules.update( { sheduleId :  $scope.allShedules[editid]._id } , $scope.shedulesList ,function(data){
+      $scope.allShedules[editid] = data;
+     });
    Mytitles.update( { titleid :  editid } ,  $scope.newTitle );
       $scope.newTitle ={ title: "" };
        $scope.viewShedule =defaultShedule.slice();
@@ -201,11 +215,14 @@ $scope.saveEditShedule = function(){
 
   delShedule = function(id){
 
-    Shedules.remove( { sheduleId :  id });
+    Shedules.remove( { sheduleId :  $scope.allShedules[id]._id },function(data){
+      $scope.allShedules = data;
+      $scope.shedulesList = data[0].shedule[0];
+     });
     Mytitles.remove( { titleid :  id });
     $scope.titlesList.splice( id, 1 );
     $scope.viewShedule =defaultShedule.slice();
-    $scope.shedulesList = defaultShedule.slice();
+    
 
     };
 
@@ -213,10 +230,13 @@ $scope.saveEditShedule = function(){
   $scope.saveShedule = function(){
 
     $scope.setShedule($scope.titlesList.length);
-    $scope.shedulesList=$scope.viewShedule;
+    $scope.shedulesList=$scope.viewShedule.slice();
     Mytitles.save($scope.newTitle);
     $scope.titlesList =Mytitles.query();
-    Shedules.save($scope.viewShedule);
+    Shedules.save($scope.viewShedule, function(allShedules)
+      {
+        $scope.allShedules =allShedules;
+      });
     $scope.newTitle ={ title: "" };
     $scope.viewShedule =defaultShedule.slice();
     $scope.setTab(1);
@@ -230,19 +250,20 @@ $scope.saveEditShedule = function(){
   $scope.setShedule = function(id) {
 
     $scope.currentShedule= id;
-    $scope.shedulesList = Shedules.getData({ sheduleId :  id},function()
-    {
+    $scope.allShedules = Shedules.query(function(data){
+      $scope.shedulesList  = data[id].shedule[0];
+      if($scope.editBtn){
+          editShedule(id);
+       };
+
+      if($scope.delBtn){
+        delShedule(id);
+      };
       window.localStorage['nCurrentShedule']=JSON.stringify($scope.shedulesList);
     })
     
 
-    if($scope.editBtn){
-      editShedule(id);
-    };
-
-    if($scope.delBtn){
-      delShedule(id);
-    };
+    
 
   };
 
